@@ -5,13 +5,15 @@
 BM22S4221-1
 ===========================================================
 
+The Best Modules BM22S4221-1 is a PIR detector digital module, which uses the UART communication method. This document provides the description of the BM22S4221-1 Arduino Lib functions and how to install the Arduino Lib. The example uses the BMA46M422 module to demonstrate the functions of the alarm detection and others.
+
 #### Applicable types:
 <div align=center>
 
 |Part No.   |Description                   |
 |:---------:|:----------------------------:|
-|BM22S4221-1||
-|BMA26M422  |  |
+|BM22S4221-1|PIR Detector Digital Module|
+|BMA26M422  | On-board BM22S4221-1 Module |
 
 </div> 
 
