@@ -1,0 +1,59 @@
+#######################################
+# Syntax Coloring Map For BM22S4221-1
+#######################################
+
+#######################################
+# Class (KEYWORD1)
+#######################################
+BM22S4221_1	KEYWORD1			
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+getSTATUS	KEYWORD2
+requestInfoPackage	KEYWORD2
+getFWVer	KEYWORD2
+getProDate	KEYWORD2
+isAotuTx	KEYWORD2
+getStatusPinActiveMode	KEYWORD2
+getVBG	KEYWORD2
+isInfoAvailable	KEYWORD2
+readInfopackage	KEYWORD2
+resetModule	KEYWORD2
+restoreDefault		KEYWORD2
+setAutoTx	KEYWORD2
+setStatusPinActiveMode	KEYWORD2
+setOpaGain	KEYWORD2	
+setAlarmThreshold	KEYWORD2	
+setAlarmDetectDelay	KEYWORD2
+setAlarmOutputTime	KEYWORD2
+setPreheaTime	KEYWORD2
+#######################################
+# Constants (LITERAL1)
+#######################################
+UART_BAUD	LITERAL1
+AUTO	LITERAL1	
+PASSIVE	LITERAL1
+HIGH_LEVEL	LITERAL1
+LOW_LEVEL	LITERAL1
+CHECK_OK 	LITERAL1   
+CHECK_ERROR	LITERAL1     
+TIMEOUT_ERROR	LITERAL1   
+CMD_U0	LITERAL1
+CMD_U1	LITERAL1
+CMD_U2	LITERAL1
+CMD_U3	LITERAL1
+CMD_R0	LITERAL1
+CMD_R1	LITERAL1
+CMD_R2	LITERAL1
+CMD_W	LITERAL1
+ADD_U	LITERAL1
+ADD_R0	LITERAL1
+ADD_R1	LITERAL1
+ADD_R2	LITERAL1
+ADD_W0	LITERAL1
+ADD_W1	LITERAL1
+ADD_W2	LITERAL1
+ADD_W3	LITERAL1
+ADD_W4	LITERAL1
+ADD_W5	LITERAL1
+ADD_W6	LITERAL1
