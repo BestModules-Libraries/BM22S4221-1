@@ -1,9 +1,8 @@
 /*****************************************************************
   File:             BM22S4221-1.cpp
-  Author:           KE,BESTMODULES
+  Author:           BEST MODULES CORP.
   Description:      Communication and operation function with module
-  History：
-  V1.0.1-- initial version；2022-11-02；Arduino IDE : v1.8.13
+  Version：V1.0.2   --2025-08-26
 ******************************************************************/
 #include  "BM22S4221-1.h"
 
@@ -13,7 +12,7 @@ Parameters:  *theSerial：hardware serial
              BMduino optional:serial(default) serial1/seria2/seria3/seria4
              UNO optional:serial(default)
 Return:      none    
-Others:      
+Others:      none  
 **********************************************************/
 BM22S4221_1::BM22S4221_1(uint8_t statusPin,HardwareSerial*theSerial)
 {
@@ -21,12 +20,13 @@ BM22S4221_1::BM22S4221_1(uint8_t statusPin,HardwareSerial*theSerial)
   _softSerial = NULL;
   _statusPin = statusPin;
 }
+
 /**********************************************************
 Description: Select the software serial port RX TX you need to use
 Parameters:       rxPin:RX pin on the development board
              txPin:TX pin on the development board
 Return:      none    
-Others:      
+Others:      none  
 **********************************************************/
 BM22S4221_1::BM22S4221_1(uint8_t statusPin,uint8_t rxPin, uint8_t txPin)
 {
@@ -36,11 +36,12 @@ BM22S4221_1::BM22S4221_1(uint8_t statusPin,uint8_t rxPin, uint8_t txPin)
   _txPin = txPin;
   _softSerial = new SoftwareSerial(_rxPin, _txPin);
 }
+
 /**********************************************************
 Description: Set serial baud rate
-Parameters:  uartBaud：9600(default)
-Return:      none
-Others:
+Parameters:  void
+Return:      void
+Others:      none
 **********************************************************/
 void BM22S4221_1::begin()
 {
@@ -54,11 +55,12 @@ void BM22S4221_1::begin()
   }
   pinMode(_statusPin, INPUT);
 }
+
 /**********************************************************
 Description: Get STATUS pin level
-Parameters: None
-Return: None
-Others: None
+Parameters: void
+Return: 1:High level,0:Low Level
+Others: none
 **********************************************************/
 uint8_t BM22S4221_1::getSTATUS()
 {
@@ -70,7 +72,7 @@ Description: Get all current data of the module
 Parameters:  buff(25byte): Store the FW version and production date
 Return:     1: module data acquisition failed, there is no correct feedback value
             0: Module data obtained successfully
-Others:
+Others:     none
 **********************************************************/
 uint8_t BM22S4221_1::requestInfoPackage(uint8_t buff[])
 {
@@ -87,14 +89,13 @@ uint8_t BM22S4221_1::requestInfoPackage(uint8_t buff[])
     return  1;
   }
 }
+
 /**********************************************************
-Description: Query the FW version and production date.
+Description: Query the FW version
              The FW version number and production date are both 8421 BCD code.
-Parameters:  buff[]:12 byte
-             buff[0]:year  buff[1]:month  buff[2]:day
-Return:      1: module data acquisition failed, there is no correct feedback value
-             0: Module data obtained successfully
-Others:
+Parameters:  void
+Return:      FWVer:16bit FWVer
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::getFWVer()
 {
@@ -109,15 +110,15 @@ uint8_t BM22S4221_1::getFWVer()
   }
   return   FWVer;
 }
-/**********************************************************
-Description: Query the FW version
-             The FW version number and production date are both 8421 BCD code.
-Parameters:  none
-Return:      0:read error
-             data:16bit FWVer
-Others:
-**********************************************************/
 
+/**********************************************************
+Description: Query the production date.
+             The FW version number and production date are both 8421 BCD code.
+Parameters:  buff[0]:year  buff[1]:month  buff[2]:day
+Return:      1: module data acquisition failed, there is no correct feedback value
+            0: Module data obtained successfully
+Others:     none
+**********************************************************/
 uint8_t BM22S4221_1::getProDate(uint8_t buff[])
 {
   clear_UART_FIFO();
@@ -136,20 +137,21 @@ uint8_t BM22S4221_1::getProDate(uint8_t buff[])
     return   1;
   }
 }
+
 /**********************************************************
 Description: Query whether the serial port data output of the current device is enabled
-Parameters:  state: Store data
-Return:      state:1/0
-             0: Serial port TX disable
-             1: Serial port TX enable
-Others:
+Parameters:  void
+Return:      TX Auto status:
+             0(false): Serial port TX disable
+             1(true): Serial port TX enable
+Others:      none
 **********************************************************/
 bool BM22S4221_1::isAutoTx()
 {
   clear_UART_FIFO();
   uint8_t uniCmd[4] = {0xd0, 0x1b,0x00,0x15};
   uint8_t uniAck[8];
-  uint8_t state=0;
+  uint8_t state=2;
   wirteBytes(uniCmd, 4);
   delay(20);
   if (readBytes(uniAck,8,10) == 0x00 && uniAck[6] == AUTO)
@@ -165,11 +167,12 @@ bool BM22S4221_1::isAutoTx()
 
 /**********************************************************
 Description: Query the normal output of equipment alarm output level
-Parameters:  store data 1/0
+Parameters:  void
 Return:      ActiveMode:
              0: Status output low level, normal state is high level
              1: Status output high level, normal low level
-Others:
+						 2:	error
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::getStatusPinActiveMode()
 {  
@@ -194,9 +197,10 @@ uint8_t BM22S4221_1::getStatusPinActiveMode()
 Description: Query internal VBG voltage a/d value
              1.25V/VDD×256=VBG a/d value
              Vbgad: used to store acquired internal Ad value of BG voltage
+Parameters:  void
 Return:    0: module data read error
            data:Vbgad internal Ad value of BG voltage
-Others:
+Others:    none
 **********************************************************/
 uint8_t BM22S4221_1::getVBG()
 {
@@ -212,12 +216,13 @@ uint8_t BM22S4221_1::getVBG()
   }
   return  VBG;
 }
+
 /**********************************************************
 Description: Read the data automatically output by the module
-Parameters:  none
+Parameters:  void
 Return:      1:is 25 byte data
              0:Incorrect data
-Others:
+Others:      none
 **********************************************************/
 bool BM22S4221_1::isInfoAvailable()
 {
@@ -315,11 +320,12 @@ bool BM22S4221_1::isInfoAvailable()
   }
   return result;
 }
+
 /**********************************************************
 Description: Read the data automatically output by the module
 Parameters:  array[]:25 byte data
-Return:    
-Others:     
+Return:      void
+Others:      none
 **********************************************************/
 void BM22S4221_1::readInfoPackage(uint8_t array[])
 {
@@ -328,6 +334,7 @@ void BM22S4221_1::readInfoPackage(uint8_t array[])
     array[i] = _recBuf[i];
   }
 }
+
 /**********************************************************
 Description: Send command to restore the module to factory settings
                Factory settings:
@@ -338,10 +345,10 @@ Description: Send command to restore the module to factory settings
                5. preheating time: 30s
                6. serial port automatic output de energization
                7. alarm signal output level is high
-Parameters:  none
+Parameters:  void
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::restoreDefault()
 {
@@ -359,12 +366,13 @@ uint8_t BM22S4221_1::restoreDefault()
     return  1;
   }
 }
+
 /**********************************************************
 Description: Send instructions to reset the chip in the module
-Parameters:  none
+Parameters:  void
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:     
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::resetModule()
 { 
@@ -387,11 +395,11 @@ uint8_t BM22S4221_1::resetModule()
 /**********************************************************
 Description: Modify the device serial port data output Disable
 Parameters:  state：PASSIVE 0x00 / AUTO 0x08
-             AUTO:Automatic output of enabling module TX pin
-             PASSIVE:Automatic output de energization of enabling module TX pin
+               AUTO:Automatic output of enabling module TX pin
+               PASSIVE:Automatic output de energization of enabling module TX pin
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::setAutoTx(uint8_t state)
 {
@@ -411,14 +419,15 @@ uint8_t BM22S4221_1::setAutoTx(uint8_t state)
       return  1;
     }
 }
+
 /**********************************************************
 Description: Modify device alarm output level
 Parameters:  state:HIGH/LOW
-             LOW:When alerting, Status outputs HIGH level, and the normal state is LOW level
-             HIGH:When alerting, Status outputs LOW level, and the normal state is HIGH leve
+               LOW:When alerting, Status outputs HIGH level, and the normal state is LOW level
+               HIGH:When alerting, Status outputs LOW level, and the normal state is HIGH leve
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::setStatusPinActiveMode(uint8_t state)
 {
@@ -438,13 +447,14 @@ uint8_t BM22S4221_1::setStatusPinActiveMode(uint8_t state)
       return  1;
     }
 }
+
 /**********************************************************
 Description: Modify Internal OPA Gain
-Parameters:  value:setting range is 0!31
+Parameters:  value:setting range is 0~31
              OPA gain=128 + value*8
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::setOpaGain(uint8_t value)
 {
@@ -464,13 +474,14 @@ uint8_t BM22S4221_1::setOpaGain(uint8_t value)
     return  1;
   }
 }
+
 /**********************************************************
 Description: Modify detection deviation value
              deviation value:Change amount of alarm detection
-Parameters:  value:Setting range 15~120
+Parameters:  Threshold:Setting range 15~120
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::setAlarmThreshold(uint8_t Threshold)
 {
@@ -490,13 +501,14 @@ uint8_t BM22S4221_1::setAlarmThreshold(uint8_t Threshold)
     return  1;
   }
 }
+
 /**********************************************************
 Description: Modify alarm detection delay time          
 Parameters:  time:Alarm detection delay time = n × 0.5s=time
-             unit s.
+               unit s.
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::setAlarmDetectDelay(uint8_t time)
 {
@@ -517,12 +529,13 @@ uint8_t BM22S4221_1::setAlarmDetectDelay(uint8_t time)
     return  1;
   }
 }
+
 /**********************************************************
 Description: Modify the output time of alarm signal status pin           
 Parameters:  time:Alarm status pin output time = n × 0.5s=time  unit s.
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::setAlarmOutputTime(uint8_t time)
 {
@@ -543,13 +556,14 @@ uint8_t BM22S4221_1::setAlarmOutputTime(uint8_t time)
     return  1;
   }
 }
+
 /**********************************************************
 Description: Modify preheating time
              Change to less than 30s
 Parameters:  time:The setting range is 30~127 and the preheating time is not repairable
 Return:      1: Module setting failed without correct feedback value
              0: Module set successfully
-Others:
+Others:      none
 **********************************************************/
 uint8_t BM22S4221_1::setPreheaTime(uint8_t time)
 {
@@ -570,6 +584,7 @@ uint8_t BM22S4221_1::setPreheaTime(uint8_t time)
     return  1;
   }
 }
+
 /**********************************************************
 Description: UART readBytes
 Parameters:  rbuf:Variables for storing Data to be read
@@ -577,9 +592,8 @@ Parameters:  rbuf:Variables for storing Data to be read
 Return:      0: check ok
              1: check error
              2: timeout error
-Others:
+Others:      none
 **********************************************************/
-
 uint8_t BM22S4221_1::readBytes(uint8_t rbuf[], uint8_t len, uint16_t waitTime)
 {
   uint8_t i, delayCnt, checkCode;
@@ -641,8 +655,8 @@ Description: UART wirteBytes
              Automatically determine whether a hardware or software serial  is used
 Parameters:  wbuf:Variables for storing Data to be read
              len:Length of data plus command
-Return:      none
-Others:
+Return:      void
+Others:      none
 **********************************************************/
 void  BM22S4221_1::wirteBytes(uint8_t wbuf[], uint8_t len)
 {
@@ -664,13 +678,13 @@ void  BM22S4221_1::wirteBytes(uint8_t wbuf[], uint8_t len)
   }
   delay(70);//TDEL-RSP --Response delay time
 }
+
 /**********************************************************
 Description: eliminate buff data
-Parameters:  none
-Return:      none    
-Others:      
+Parameters:  void
+Return:      void
+Others:      none
 **********************************************************/ 
-
 void BM22S4221_1::clear_UART_FIFO()
 {
     if (_softSerial != NULL)
