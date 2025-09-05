@@ -1,5 +1,5 @@
 ﻿<div align=center>
-<img src="https://github.com/BestModules-Libraries/img/blob/main/BM22S4221-1_BMA26M422_V1.0.png" width="480" height="240"> 
+<img src="https://github.com/BestModules-Libraries/img/blob/main/BM22S4221-1_BMA26M422_V1.0.png" width="860" height="240"> 
 </div> 
 
 BM22S4221-1
@@ -53,3 +53,4 @@ If you have any questions or concerns on licensing, please contact technical sup
 Distributed as-is; no warranty is given.
 
 BEST MODULES CORP.
+
